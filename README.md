@@ -36,9 +36,15 @@ Performance metrics including page faults.
 
 Prerequisites:
 
-Python 3.x
+Python Version: Python 3.x
 
-Tkinter (comes pre-installed with Python)
+Libraries:
+
+tkinter (built-in, for GUI)
+
+matplotlib (for graphical representation)
+
+numpy (for numerical computations)
 
 Steps to Run:
 ```
