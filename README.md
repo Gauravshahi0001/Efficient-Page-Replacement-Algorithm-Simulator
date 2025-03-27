@@ -8,11 +8,23 @@ Supported Algorithms:
 
 FIFO (First-In-First-Out)
 
+-Replaces the oldest page in memory.
+-Simple but may cause Belady’s Anomaly.
+
 LRU (Least Recently Used)
 
-Optimal (Belady's Algorithm)
+-Replaces the page that hasn’t been used for the longest time.
+-More efficient than FIFO.
+
+Optimal Page Replacement
+
+-Replaces the page that won’t be needed for the longest time.
+-Provides the best performance but requires future knowledge.
 
 LFU (Least Frequently Used)
+
+-Replaces the page that is used the least.
+-Works well for stable reference patterns.
 
 🎯 Features
 
