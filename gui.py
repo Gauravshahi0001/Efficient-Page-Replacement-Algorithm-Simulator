@@ -10,7 +10,7 @@ class PageReplacementGUI:
         self.root.geometry("700x650")
         self.root.configure(bg="#1e1e2e")  # Dark Theme Background
 
-        # 🌙 Dark Mode / Light Mode Toggle
+        #  Dark Mode / Light Mode Toggle
         self.is_dark_mode = True
         self.toggle_button = tk.Button(root, text="🌙 Dark Mode", command=self.toggle_mode, font=("Arial", 12, "bold"), 
                                        bg="#44475a", fg="white", activebackground="#bd93f9", relief="raised", padx=10, pady=5)
@@ -21,36 +21,36 @@ class PageReplacementGUI:
                                     fg="white", bg="#1e1e2e", padx=10, pady=5)
         self.title_label.pack(pady=10)
 
-        # 📥 Page Reference Input
+        #  Page Reference Input
         self.create_label("Enter Page Reference String (comma separated):")
         self.page_input = self.create_entry("7, 0, 1, 2, 0, 3, 4, 2, 3, 0, 4, 2")
 
-        # 🔢 Number of Frames Input
+        #  Number of Frames Input
         self.create_label("Enter Number of Frames:")
         self.frame_input = self.create_entry("3")
 
-        # 🔄 Algorithm Selection Dropdown
+        #  Algorithm Selection Dropdown
         self.create_label("Select Algorithm:")
         self.algorithm_var = tk.StringVar()
         self.algorithm_var.set("FIFO")  # Default selection
         self.dropdown = ttk.Combobox(root, textvariable=self.algorithm_var, values=["FIFO", "LRU", "Optimal", "LFU"], font=("Arial", 12))
         self.dropdown.pack(pady=5)
 
-        # 🏁 Run Simulation Button (Hover Effect)
+        #  Run Simulation Button (Hover Effect)
         self.run_button = tk.Button(root, text="▶ Run Simulation", command=self.run_simulation, font=("Arial", 14, "bold"),
                                     bg="#50fa7b", fg="black", activebackground="#3ae374", relief="raised", padx=10, pady=5)
         self.run_button.pack(pady=10)
 
-        # 📊 Result Display
+        #  Result Display
         self.result_label = tk.Label(root, text="", font=("Arial", 14, "bold"), fg="white", bg="#1e1e2e")
         self.result_label.pack()
 
-        # 📉 Graph Button
+        #  Graph Button
         self.graph_button = tk.Button(root, text="📊 Show Graph", command=self.plot_graph, font=("Arial", 12, "bold"),
                                       bg="#ff79c6", fg="white", activebackground="#ff5555", relief="raised", padx=10, pady=5)
         self.graph_button.pack(pady=10)
 
-        # 🖥 Scrollable Output Area (Glass Effect)
+        #  Scrollable Output Area (Glass Effect)
         frame = tk.Frame(root, bg="#282a36")
         frame.pack(pady=10)
         self.canvas = tk.Canvas(frame, width=600, height=300, bg="#282a36")
@@ -69,7 +69,7 @@ class PageReplacementGUI:
         self.canvas.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
 
-    # 🌙 Toggle Dark & Light Mode
+    #  Toggle Dark & Light Mode
     def toggle_mode(self):
         if self.is_dark_mode:
             self.root.configure(bg="white")
@@ -83,18 +83,18 @@ class PageReplacementGUI:
             self.toggle_button.configure(text="🌙 Dark Mode", bg="#44475a", fg="white")
         self.is_dark_mode = not self.is_dark_mode
 
-    # 📥 Create Labels (Reusable)
+    #  Create Labels (Reusable)
     def create_label(self, text):
         tk.Label(self.root, text=text, font=("Arial", 12), fg="white", bg="#1e1e2e").pack()
 
-    # ✏ Create Rounded Input Fields
+    #  Create Rounded Input Fields
     def create_entry(self, default_text):
         entry = tk.Entry(self.root, width=50, font=("Arial", 12), relief="flat", bg="#282a36", fg="white")
         entry.insert(0, default_text)
         entry.pack(pady=5)
         return entry
 
-    # ▶ Run Simulation
+    #  Run Simulation
     def run_simulation(self):
         try:
             pages = list(map(int, self.page_input.get().split(",")))
@@ -130,7 +130,7 @@ class PageReplacementGUI:
 
         self.result_label.config(text=f"🔥 Total Page Faults: {page_faults}", fg="red")
 
-    # 📊 Plot Graph
+    #  Plot Graph
     def plot_graph(self):
         page_faults = [("FIFO", 10), ("LRU", 8), ("Optimal", 6), ("LFU", 9)]
         names, values = zip(*page_faults)
