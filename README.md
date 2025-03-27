@@ -24,11 +24,13 @@ Real-time visualization of memory pages.
 
 Performance metrics including page faults.
 
+## 📂 Project Structure
+```
 📂 Project Structure
-
 ├── algorithms.py  # Implements page replacement algorithms
 ├── gui.py         # GUI interface for the simulator
-├── main.py        # Entry point to run the application
+└── main.py        # Entry point to run the application
+```
 
 🔧 Installation & Usage
 
@@ -38,8 +40,8 @@ Python 3.x
 
 Tkinter (comes pre-installed with Python)
 
-Steps to Run:
-
+##Steps to Run:
+```
 Clone the repository:
 
 git clone <repository_url>
@@ -48,7 +50,7 @@ cd <repository_folder>
 Run the simulator:
 
 python main.py
-
+```
 🛠 How It Works
 
 The user inputs a sequence of pages and the number of frames.
