@@ -40,7 +40,7 @@ Python 3.x
 
 Tkinter (comes pre-installed with Python)
 
-##Steps to Run:
+Steps to Run:
 ```
 Clone the repository:
 
