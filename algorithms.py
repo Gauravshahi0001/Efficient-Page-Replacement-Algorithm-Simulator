@@ -1,6 +1,6 @@
 from collections import deque, Counter
 
-# ✅ FIFO (First-In-First-Out) Page Replacement Algorithm
+# FIFO (First-In-First-Out) Page Replacement Algorithm
 def fifo_page_replacement(pages, frames):
     memory = deque()
     page_faults = 0
@@ -16,7 +16,7 @@ def fifo_page_replacement(pages, frames):
 
     return page_faults, memory_steps
 
-# ✅ LRU (Least Recently Used) Page Replacement Algorithm
+# LRU (Least Recently Used) Page Replacement Algorithm
 def lru_page_replacement(pages, frames):
     memory = []
     page_faults = 0
@@ -34,7 +34,7 @@ def lru_page_replacement(pages, frames):
 
     return page_faults, memory_steps
 
-# ✅ Optimal Page Replacement Algorithm
+#  Optimal Page Replacement Algorithm
 def optimal_page_replacement(pages, frames):
     memory = []
     page_faults = 0
@@ -52,7 +52,7 @@ def optimal_page_replacement(pages, frames):
 
     return page_faults, memory_steps
 
-# ✅ LFU (Least Frequently Used) Page Replacement Algorithm
+# LFU (Least Frequently Used) Page Replacement Algorithm
 def lfu_page_replacement(pages, frames):
     memory = []
     frequency = Counter()
