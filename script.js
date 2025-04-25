@@ -1,9 +1,9 @@
-
+// DOM Elements
 const pageReferenceInput = document.getElementById('page-reference');
 const frameCountInput = document.getElementById('frame-count');
 const runSimulationBtn = document.getElementById('run-simulation');
 
-
+// Animation Controls
 const prevStepBtn = document.getElementById('prev-step');
 const playPauseBtn = document.getElementById('play-pause');
 const nextStepBtn = document.getElementById('next-step');
@@ -11,26 +11,28 @@ const animationSpeedInput = document.getElementById('animation-speed');
 const currentStepDisplay = document.getElementById('current-step');
 const totalStepsDisplay = document.getElementById('total-steps');
 
+// Display Elements
 const fifoDisplay = document.getElementById('fifo-display');
 const lruDisplay = document.getElementById('lru-display');
 const optimalDisplay = document.getElementById('optimal-display');
 const lfuDisplay = document.getElementById('lfu-display');
 
-
+// Explanation Elements
 const fifoExplanation = document.getElementById('fifo-explanation-content');
 const lruExplanation = document.getElementById('lru-explanation-content');
 const optimalExplanation = document.getElementById('optimal-explanation-content');
 const lfuExplanation = document.getElementById('lfu-explanation-content');
 
+// Fault Counters
 const fifoFaults = document.getElementById('fifo-faults');
 const lruFaults = document.getElementById('lru-faults');
 const optimalFaults = document.getElementById('optimal-faults');
 const lfuFaults = document.getElementById('lfu-faults');
 
-
+// Chart
 let comparisonChart = null;
 
-
+// Animation state
 let animationState = {
     currentStep: 0,
     totalSteps: 0,
@@ -45,7 +47,7 @@ let animationState = {
     }
 };
 
-
+// Event Listeners
 document.addEventListener('DOMContentLoaded', function() {
     runSimulationBtn.addEventListener('click', runSimulation);
     prevStepBtn.addEventListener('click', goToPreviousStep);
@@ -53,16 +55,17 @@ document.addEventListener('DOMContentLoaded', function() {
     nextStepBtn.addEventListener('click', goToNextStep);
     animationSpeedInput.addEventListener('input', updateAnimationSpeed);
     
-    
+    // Initialize with default values
     pageReferenceInput.value = '7, 0, 1, 2, 0, 3, 4, 2, 3, 0, 4, 2';
     frameCountInput.value = 3;
     
-    
+    // Run simulation with default values
     runSimulation();
 });
 
-
+// Main Simulation Function
 function runSimulation() {
+    // Parse inputs
     const pageReferenceString = pageReferenceInput.value
         .split(',')
         .map(page => page.trim())
@@ -71,18 +74,22 @@ function runSimulation() {
     
     const frameCount = parseInt(frameCountInput.value);
     
+    // Validate inputs
     if (pageReferenceString.some(isNaN) || isNaN(frameCount) || frameCount <= 0) {
         alert('Please enter valid inputs. Page references should be numbers separated by commas, and frame count should be a positive integer.');
         return;
     }
     
+    // Stop any ongoing animation
     stopAnimation();
     
+    // Run algorithms
     const fifoResult = simulateFIFO(pageReferenceString, frameCount);
     const lruResult = simulateLRU(pageReferenceString, frameCount);
     const optimalResult = simulateOptimal(pageReferenceString, frameCount);
     const lfuResult = simulateLFU(pageReferenceString, frameCount);
     
+    // Store results for animation
     animationState.results = {
         fifo: fifoResult,
         lru: lruResult,
@@ -90,15 +97,19 @@ function runSimulation() {
         lfu: lfuResult
     };
     
+    // Reset animation state
     animationState.currentStep = 0;
     animationState.totalSteps = pageReferenceString.length;
     animationState.isPlaying = false;
     
+    // Update UI
     updateStepDisplay();
     updateAnimationControls();
     
+    // Display initial step
     displayAnimationStep(0);
     
+    // Update chart with final results
     updateChart([
         fifoResult.faults,
         lruResult.faults,
@@ -107,6 +118,7 @@ function runSimulation() {
     ]);
 }
 
+// Animation Control Functions
 function goToPreviousStep() {
     if (animationState.currentStep > 0) {
         animationState.currentStep--;
@@ -181,24 +193,28 @@ function updateAnimationControls() {
     nextStepBtn.disabled = animationState.currentStep === animationState.totalSteps - 1;
 }
 
+// Display Animation Step
+// In the displayAnimationStep function, we need to modify it to highlight all faults when at the final step
 
 function displayAnimationStep(stepIndex) {
     if (!animationState.results.fifo) return;
     
-    
+    // Get the steps for each algorithm up to the current step
     const fifoSteps = animationState.results.fifo.steps.slice(0, stepIndex + 1);
     const lruSteps = animationState.results.lru.steps.slice(0, stepIndex + 1);
     const optimalSteps = animationState.results.optimal.steps.slice(0, stepIndex + 1);
     const lfuSteps = animationState.results.lfu.steps.slice(0, stepIndex + 1);
     
+    // Check if we're at the final step
     const isFinalStep = stepIndex === animationState.totalSteps - 1;
     
-    
+    // Display each algorithm's state
     displayAlgorithmStep(fifoDisplay, fifoSteps, stepIndex, 'fifo', isFinalStep);
     displayAlgorithmStep(lruDisplay, lruSteps, stepIndex, 'lru', isFinalStep);
     displayAlgorithmStep(optimalDisplay, optimalSteps, stepIndex, 'optimal', isFinalStep);
     displayAlgorithmStep(lfuDisplay, lfuSteps, stepIndex, 'lfu', isFinalStep);
     
+    // Update fault counters
     const fifoFaultCount = fifoSteps.filter(step => step.fault).length;
     const lruFaultCount = lruSteps.filter(step => step.fault).length;
     const optimalFaultCount = optimalSteps.filter(step => step.fault).length;
@@ -209,19 +225,20 @@ function displayAnimationStep(stepIndex) {
     optimalFaults.textContent = optimalFaultCount;
     lfuFaults.textContent = lfuFaultCount;
     
-    
+    // Update explanations
     updateExplanation(fifoExplanation, fifoSteps[stepIndex], 'FIFO');
     updateExplanation(lruExplanation, lruSteps[stepIndex], 'LRU');
     updateExplanation(optimalExplanation, optimalSteps[stepIndex], 'Optimal');
     updateExplanation(lfuExplanation, lfuSteps[stepIndex], 'LFU');
     
-    
+    // Highlight fault counters in red at the final step
     if (isFinalStep) {
         fifoFaults.style.color = '#ff4757';
         lruFaults.style.color = '#ff4757';
         optimalFaults.style.color = '#ff4757';
         lfuFaults.style.color = '#ff4757';
         
+        // Add pulsing animation to fault counters
         fifoFaults.classList.add('highlight-faults');
         lruFaults.classList.add('highlight-faults');
         optimalFaults.classList.add('highlight-faults');
@@ -239,35 +256,37 @@ function displayAnimationStep(stepIndex) {
     }
 }
 
+// Update the displayAlgorithmStep function to highlight all faults in the final step
 function displayAlgorithmStep(displayElement, steps, currentStepIndex, algoType, isFinalStep) {
     displayElement.innerHTML = '';
     
+    // Create container for the visualization
     const visualContainer = document.createElement('div');
     visualContainer.className = 'visual-simulation';
     
-    
+    // Create the page reference row at the top
     const referenceRow = document.createElement('div');
     referenceRow.className = 'reference-row';
     
-    
+    // Add a label for the reference row
     const refLabel = document.createElement('div');
     refLabel.className = 'frame-label';
     refLabel.textContent = 'References:';
     referenceRow.appendChild(refLabel);
     
-    
+    // Get all page references
     const allReferences = steps.map(step => step.page);
     
-
+    // Add page references
     allReferences.forEach((page, index) => {
         const refCell = document.createElement('div');
         refCell.className = 'ref-cell';
         
-
+        // Highlight current reference
         if (index === currentStepIndex) {
             refCell.classList.add('active-ref');
             
-            
+            // Add down arrow indicator
             const arrow = document.createElement('div');
             arrow.className = 'arrow-indicator';
             arrow.innerHTML = '⬇';
@@ -277,7 +296,7 @@ function displayAlgorithmStep(displayElement, steps, currentStepIndex, algoType,
             refCell.appendChild(arrow);
         }
         
-        
+        // If final step and this reference caused a fault, highlight it
         if (isFinalStep && steps[index].fault) {
             refCell.classList.add('fault-ref');
         }
@@ -288,35 +307,39 @@ function displayAlgorithmStep(displayElement, steps, currentStepIndex, algoType,
     
     visualContainer.appendChild(referenceRow);
     
-    
+    // Create frame rows (one for each frame)
     const frameCount = parseInt(frameCountInput.value);
     
     for (let i = 0; i < frameCount; i++) {
         const frameRow = document.createElement('div');
         frameRow.className = 'frame-row';
         
+        // Add a label for this frame
         const frameLabel = document.createElement('div');
         frameLabel.className = 'frame-label';
         frameLabel.textContent = `Frame ${i+1}:`;
         frameRow.appendChild(frameLabel);
         
+        // Add frame cells for each step
         steps.forEach((step, stepIndex) => {
             const frameCell = document.createElement('div');
             frameCell.className = 'frame-cell';
             
-            
+            // If we have a value for this frame
             if (i < step.frames.length) {
                 frameCell.textContent = step.frames[i];
                 
+                // Highlight current step
                 if (stepIndex === currentStepIndex) {
                     frameCell.classList.add('active');
                 }
                 
+                // Highlight page fault for current step
                 if (step.fault && step.frames[i] === step.page && stepIndex === currentStepIndex) {
                     frameCell.classList.add('fault');
                     frameCell.classList.add('entering');
                     
-                    
+                    // Add indicator for page fault
                     const indicator = document.createElement('div');
                     indicator.className = 'arrow-indicator';
                     indicator.innerHTML = '⚠️';
@@ -326,6 +349,7 @@ function displayAlgorithmStep(displayElement, steps, currentStepIndex, algoType,
                     frameCell.appendChild(indicator);
                 }
                 
+                // If final step and this step had a fault, highlight the frame that was loaded
                 if (isFinalStep && step.fault && step.frames[i] === step.page) {
                     frameCell.classList.add('final-fault');
                 }
@@ -342,6 +366,7 @@ function displayAlgorithmStep(displayElement, steps, currentStepIndex, algoType,
     displayElement.appendChild(visualContainer);
 }
 
+// Update Explanation
 function updateExplanation(explanationElement, step, algoName) {
     if (!step) return;
     
@@ -377,7 +402,7 @@ function updateExplanation(explanationElement, step, algoName) {
     explanationElement.innerHTML = explanation;
 }
 
-
+// FIFO Algorithm
 function simulateFIFO(pageReferenceString, frameCount) {
     const frames = [];
     const queue = [];
@@ -385,16 +410,20 @@ function simulateFIFO(pageReferenceString, frameCount) {
     let faults = 0;
     
     pageReferenceString.forEach(page => {
+        // Check if page is already in frames
         const isPageInFrames = frames.includes(page);
         let replaced = null;
         
         if (!isPageInFrames) {
+            // Page fault
             faults++;
             
             if (frames.length < frameCount) {
+                // If there's space, add the page
                 frames.push(page);
                 queue.push(page);
             } else {
+                // Replace the oldest page (FIFO)
                 replaced = queue.shift();
                 const index = frames.indexOf(replaced);
                 frames[index] = page;
@@ -402,6 +431,7 @@ function simulateFIFO(pageReferenceString, frameCount) {
             }
         }
         
+        // Record this step
         steps.push({
             page,
             frames: [...frames],
@@ -413,6 +443,7 @@ function simulateFIFO(pageReferenceString, frameCount) {
     return { steps, faults };
 }
 
+// LRU Algorithm
 function simulateLRU(pageReferenceString, frameCount) {
     const frames = [];
     const lastUsed = {};
@@ -420,15 +451,19 @@ function simulateLRU(pageReferenceString, frameCount) {
     let faults = 0;
     
     pageReferenceString.forEach((page, time) => {
+        // Check if page is already in frames
         const isPageInFrames = frames.includes(page);
         let replaced = null;
         
         if (!isPageInFrames) {
+            // Page fault
             faults++;
             
             if (frames.length < frameCount) {
+                // If there's space, add the page
                 frames.push(page);
             } else {
+                // Find the least recently used page
                 let lruPage = frames[0];
                 let lruTime = lastUsed[lruPage];
                 
@@ -439,14 +474,17 @@ function simulateLRU(pageReferenceString, frameCount) {
                     }
                 }
                 
+                // Replace the LRU page
                 replaced = lruPage;
                 const index = frames.indexOf(lruPage);
                 frames[index] = page;
             }
         }
         
+        // Update the last used time for this page
         lastUsed[page] = time;
         
+        // Record this step
         steps.push({
             page,
             frames: [...frames],
@@ -458,34 +496,36 @@ function simulateLRU(pageReferenceString, frameCount) {
     return { steps, faults };
 }
 
+// Optimal Algorithm
 function simulateOptimal(pageReferenceString, frameCount) {
     const frames = [];
     const steps = [];
     let faults = 0;
     
+    // Helper function to find the next occurrence of a page
     function findNextOccurrence(page, currentIndex) {
         for (let i = currentIndex + 1; i < pageReferenceString.length; i++) {
             if (pageReferenceString[i] === page) {
                 return i;
             }
         }
-        return Infinity; 
+        return Infinity; // If not found, return infinity
     }
     
     pageReferenceString.forEach((page, index) => {
-        
+        // Check if page is already in frames
         const isPageInFrames = frames.includes(page);
         let replaced = null;
         
         if (!isPageInFrames) {
-            
+            // Page fault
             faults++;
             
             if (frames.length < frameCount) {
-                
+                // If there's space, add the page
                 frames.push(page);
             } else {
-               
+                // Find the page that will not be used for the longest time
                 let farthestPage = frames[0];
                 let farthestDistance = findNextOccurrence(farthestPage, index);
                 
@@ -497,14 +537,14 @@ function simulateOptimal(pageReferenceString, frameCount) {
                     }
                 }
                 
-             
+                // Replace the optimal page
                 replaced = farthestPage;
                 const replaceIndex = frames.indexOf(farthestPage);
                 frames[replaceIndex] = page;
             }
         }
         
-      
+        // Record this step
         steps.push({
             page,
             frames: [...frames],
@@ -516,26 +556,32 @@ function simulateOptimal(pageReferenceString, frameCount) {
     return { steps, faults };
 }
 
+// LFU Algorithm
 function simulateLFU(pageReferenceString, frameCount) {
     const frames = [];
     const frequency = {};
-    const lastUsed = {};
+    const lastUsed = {}; // For tie-breaking
     const steps = [];
     let faults = 0;
     
     pageReferenceString.forEach((page, time) => {
+        // Check if page is already in frames
         const isPageInFrames = frames.includes(page);
         let replaced = null;
         
+        // Update or initialize frequency
         frequency[page] = (frequency[page] || 0) + 1;
         lastUsed[page] = time;
         
         if (!isPageInFrames) {
+            // Page fault
             faults++;
             
             if (frames.length < frameCount) {
+                // If there's space, add the page
                 frames.push(page);
             } else {
+                // Find the least frequently used page
                 let lfuPage = frames[0];
                 let lfuFreq = frequency[lfuPage];
                 let lfuTime = lastUsed[lfuPage];
@@ -545,6 +591,7 @@ function simulateLFU(pageReferenceString, frameCount) {
                     const currentFreq = frequency[currentPage];
                     const currentTime = lastUsed[currentPage];
                     
+                    // If frequency is lower or same frequency but used earlier
                     if (currentFreq < lfuFreq || (currentFreq === lfuFreq && currentTime < lfuTime)) {
                         lfuFreq = currentFreq;
                         lfuPage = currentPage;
@@ -552,13 +599,14 @@ function simulateLFU(pageReferenceString, frameCount) {
                     }
                 }
                 
+                // Replace the LFU page
                 replaced = lfuPage;
                 const index = frames.indexOf(lfuPage);
                 frames[index] = page;
             }
         }
         
-     
+        // Record this step
         steps.push({
             page,
             frames: [...frames],
@@ -570,15 +618,16 @@ function simulateLFU(pageReferenceString, frameCount) {
     return { steps, faults };
 }
 
-
+// Update Chart
 function updateChart(faultCounts) {
     const ctx = document.getElementById('comparison-chart').getContext('2d');
     
+    // Destroy previous chart if it exists
     if (comparisonChart) {
         comparisonChart.destroy();
     }
     
-  
+    // Create enhanced 3D-like gradient backgrounds
     function createGradient(ctx, startRGB, endRGB) {
         const gradient = ctx.createLinearGradient(0, 0, 0, 400);
         gradient.addColorStop(0, `rgba(${startRGB[0]}, ${startRGB[1]}, ${startRGB[2]}, 1)`);
@@ -588,17 +637,17 @@ function updateChart(faultCounts) {
     }
     
     const gradients = [
-        createGradient(ctx, [255, 99, 
-        createGradient(ctx, [54, 162, 
-        createGradient(ctx, [75, 192, 
-        createGradient(ctx, [255, 206, 
+        createGradient(ctx, [255, 99, 132], [220, 20, 60]),    // FIFO - enhanced red gradient
+        createGradient(ctx, [54, 162, 235], [25, 25, 112]),    // LRU - enhanced blue gradient
+        createGradient(ctx, [75, 192, 192], [0, 128, 128]),    // Optimal - enhanced teal gradient
+        createGradient(ctx, [255, 206, 86], [218, 165, 32])    // LFU - enhanced gold gradient
     ];
     
-    
+    // Calculate the best algorithm (lowest page faults)
     const minFaults = Math.min(...faultCounts);
     const bestAlgoIndex = faultCounts.indexOf(minFaults);
     
-
+    // Prepare datasets with highlighting for the best algorithm
     const backgroundColors = gradients;
     
     const borderColors = [
@@ -608,7 +657,7 @@ function updateChart(faultCounts) {
         'rgba(255, 206, 86, 1)'
     ];
     
-    
+    // Create the chart with enhanced 3D and animation effects
     comparisonChart = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -755,7 +804,7 @@ function updateChart(faultCounts) {
                     }
                 }
             },
-            
+            // Add 3D effect with shadow
             elements: {
                 bar: {
                     borderWidth: 2,
@@ -764,16 +813,18 @@ function updateChart(faultCounts) {
                             'rgba(3, 218, 198, 1)' : 
                             borderColors[context.dataIndex];
                     },
-                    
+                    // Add shadow for 3D effect
                     shadowOffsetX: 3,
                     shadowOffsetY: 3,
                     shadowBlur: 10,
                     shadowColor: 'rgba(0, 0, 0, 0.5)',
                 }
             },
+            // Add hover effects
             onHover: (event, chartElement) => {
                 event.native.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
             },
+            // Add 3D perspective
             layout: {
                 padding: {
                     left: 10,
@@ -793,6 +844,7 @@ function updateChart(faultCounts) {
                 ctx.shadowOffsetY = 10;
             },
             afterDraw: function(chart) {
+                // Reset shadow settings after drawing
                 const ctx = chart.ctx;
                 ctx.shadowColor = 'rgba(0, 0, 0, 0)';
                 ctx.shadowBlur = 0;
@@ -802,7 +854,7 @@ function updateChart(faultCounts) {
         }]
     });
     
-    
+    // Add animation to highlight the best algorithm
     setTimeout(() => {
         const bestAlgoBar = comparisonChart.getDatasetMeta(0).data[bestAlgoIndex];
         bestAlgoBar.options.backgroundColor = createGradient(ctx, [3, 218, 198], [0, 150, 136]);
