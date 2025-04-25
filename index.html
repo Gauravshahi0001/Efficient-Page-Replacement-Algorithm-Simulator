@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Replacement Algorithm Simulator</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+</head>
+<body class="dark-theme fullscreen-mode">
+    <div class="container">
+        <header>
+            <h1>Page Replacement Algorithm Simulator</h1>
+            <p>Visualize and compare FIFO, LRU, Optimal, and LFU page replacement algorithms</p>
+        </header>
+
+        <div class="input-section">
+            <div class="input-group">
+                <label for="page-reference">Page Reference String:</label>
+                <input type="text" id="page-reference" placeholder="7, 0, 1, 2, 0, 3, 4, 2, 3, 0, 4, 2">
+            </div>
+            <div class="input-group">
+                <label for="frame-count">Number of Frames:</label>
+                <input type="number" id="frame-count" min="1" value="3">
+            </div>
+            <button id="run-simulation">Run Simulation</button>
+        </div>
+
+        <div class="animation-controls">
+            <button id="prev-step" disabled><i class="fas fa-step-backward"></i> Previous</button>
+            <button id="play-pause"><i class="fas fa-play"></i> Play</button>
+            <button id="next-step" disabled><i class="fas fa-step-forward"></i> Next</button>
+            <div class="speed-control">
+                <label for="animation-speed">Speed:</label>
+                <input type="range" id="animation-speed" min="1" max="10" value="5">
+            </div>
+            <div class="step-indicator">Step: <span id="current-step">0</span>/<span id="total-steps">0</span></div>
+        </div>
+
+        <div class="simulation-container">
+            <div class="algorithm-section" id="fifo-section">
+                <h2>FIFO Algorithm</h2>
+                <div class="simulation-display" id="fifo-display"></div>
+                <div class="explanation-box" id="fifo-explanation">
+                    <div class="explanation-title"><i class="fas fa-info-circle"></i> Explanation</div>
+                    <div class="explanation-content" id="fifo-explanation-content"></div>
+                </div>
+                <div class="fault-counter">Page Faults: <span id="fifo-faults">0</span></div>
+            </div>
+            <div class="algorithm-section" id="lru-section">
+                <h2>LRU Algorithm</h2>
+                <div class="simulation-display" id="lru-display"></div>
+                <div class="explanation-box" id="lru-explanation">
+                    <div class="explanation-title"><i class="fas fa-info-circle"></i> Explanation</div>
+                    <div class="explanation-content" id="lru-explanation-content"></div>
+                </div>
+                <div class="fault-counter">Page Faults: <span id="lru-faults">0</span></div>
+            </div>
+            <div class="algorithm-section" id="optimal-section">
+                <h2>Optimal Algorithm</h2>
+                <div class="simulation-display" id="optimal-display"></div>
+                <div class="explanation-box" id="optimal-explanation">
+                    <div class="explanation-title"><i class="fas fa-info-circle"></i> Explanation</div>
+                    <div class="explanation-content" id="optimal-explanation-content"></div>
+                </div>
+                <div class="fault-counter">Page Faults: <span id="optimal-faults">0</span></div>
+            </div>
+            <div class="algorithm-section" id="lfu-section">
+                <h2>LFU Algorithm</h2>
+                <div class="simulation-display" id="lfu-display"></div>
+                <div class="explanation-box" id="lfu-explanation">
+                    <div class="explanation-title"><i class="fas fa-info-circle"></i> Explanation</div>
+                    <div class="explanation-content" id="lfu-explanation-content"></div>
+                </div>
+                <div class="fault-counter">Page Faults: <span id="lfu-faults">0</span></div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <h2>Algorithm Comparison</h2>
+            <canvas id="comparison-chart"></canvas>
+        </div>
+
+        <footer>
+            <p>Page Replacement Algorithm Simulator &copy; 2025</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
